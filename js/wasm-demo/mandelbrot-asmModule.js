@@ -1,10 +1,9 @@
 function nonSimdAsmjsModule (global, imp, buffer) {
-  "use asm"
+  'use asm';
   var b8 = new global.Uint8Array(buffer);
   var toF = global.Math.fround;
   var imul = global.Math.imul;
 
-  const mk0 = 0x007fffff;
   function declareHeapLength() {
     b8[0x00ffffff] = 0;
   }
@@ -22,8 +21,8 @@ function nonSimdAsmjsModule (global, imp, buffer) {
 
     z_re  = xf;
     z_im  = yf;
-
-    for (i = 0; (i | 0) < (max_iterations | 0); i = (i + 1) | 0) {
+    i = 0;
+    while ((i | 0) < (max_iterations | 0)) {
       z_re2 = toF(z_re * z_re);
       z_im2 = toF(z_im * z_im);
 
@@ -35,6 +34,7 @@ function nonSimdAsmjsModule (global, imp, buffer) {
       z_re   = toF(xf + new_re);
       z_im   = toF(yf + new_im);
       count  = (count + 1) | 0;
+      i = (i + 1) | 0;
     }
     return count | 0;
   }
@@ -47,6 +47,8 @@ function nonSimdAsmjsModule (global, imp, buffer) {
     max_iterations = max_iterations | 0;
 
     var rgb = 0, r = 0, g = 0, b = 0, index = 0;
+    var mk0 = 0;
+    mk0 = 0x007fffff;
 
     index = ((((imul((width >>> 0), (y >>> 0)) | 0) + x) | 0) * 4) | 0;
     if ((value | 0) == (max_iterations | 0)) {
@@ -77,10 +79,12 @@ function nonSimdAsmjsModule (global, imp, buffer) {
     var y = 0, m = 0;
 
     yd = toF(yd);
-    for (y = 0; (y | 0) < (height | 0); y = (y + 1) | 0) {
+    y = 0;
+    while ((y | 0) < (height | 0)) {
       m = mandelPixelX1(toF(xf), toF(yf), toF(yd), max_iterations) | 0;
       mapColorAndSetPixel(x | 0, y | 0, width, m, max_iterations);
       yf = toF(yf + yd);
+      y = (y + 1) | 0;
     }
   }
 
@@ -100,10 +104,11 @@ function nonSimdAsmjsModule (global, imp, buffer) {
     xd = toF(toF(scale * toF(3)) / toF(width >>> 0));
     yd = toF(toF(scale * toF(2)) / toF(height >>> 0));
     xf = x0;
-
-    for (x = 0; (x | 0) < (width | 0); x = (x + 1) | 0) {
+    x = 0;
+    while ((x | 0) < (width | 0)) {
       mandelColumnX1(x, width, height, xf, y0, yd, max_iterations);
       xf = toF(xf + xd);
+      x = (x + 1) | 0;
     }
   }
 
@@ -125,10 +130,11 @@ function nonSimdAsmjsModule (global, imp, buffer) {
     xd = toF(toF(scale * toF(3)) / toF(width >>> 0));
     yd = toF(toF(scale * toF(2)) / toF(height >>> 0));
     xf = x0;
-
-    for (x = 0; (x | 0) < (width | 0); x = (x + 1) | 0) {
+    x = 0;
+    while ((x | 0) < (width | 0)) {
       mandelColumnX1(x, width, height, xf, y0, yd, max_iterations);
       xf = toF(xf + xd);
+      x = (x + 1) | 0;
     }
   }
 
