@@ -69,6 +69,7 @@ var canvas = function () {
 
 }();
 
+var mandelNormal = NormalModule (buffer);
 var mandelAsmjs = AsmJSModule (this, {}, buffer);
 var mandelWasm = null;
 
@@ -79,7 +80,7 @@ function drawMandelbrot (width, height, xc, yc, scale) {
   else if (choice == "ASM.JS")
     mandelAsmjs(width, height, xc, yc, scale, max_iterations);
   else
-    console.log("Normal");
+    mandelNormal(width, height, xc, yc, scale, max_iterations);
   canvas.update(buffer);
 }
 
