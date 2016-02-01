@@ -20,6 +20,8 @@ if (!HAS_WASM) {
 
 // Asm.js module buffer.
 var buffer = new ArrayBuffer(16 * 1024 * 1024);
+// WASM file buffer.
+var wasm_buffer = null;
 
 // logging operations
 var logger = {
@@ -67,14 +69,15 @@ var canvas = function () {
 
 }();
 
-var mandelNonSimd = nonSimdAsmjsModule (this, {}, buffer);
+var mandelAsmjs = AsmJSModule (this, {}, buffer);
+var mandelWasm = null;
 
 function drawMandelbrot (width, height, xc, yc, scale) {
   logger.msg ("drawMandelbrot(xc:" + xc + ", yc:" + yc + ")");
   if (choice == "WASM" && HAS_WASM)
-    console.log("WASM");
+    mandelWasm(width, height, xc, yc, scale, max_iterations);
   else if (choice == "ASM.JS")
-    mandelNonSimd(width, height, xc, yc, scale, max_iterations);
+    mandelAsmjs(width, height, xc, yc, scale, max_iterations);
   else
     console.log("Normal");
   canvas.update(buffer);
@@ -150,8 +153,20 @@ function main () {
   $("#start").click (start);
   $("#stop").click (stop);
   $("input[name=choose]").click (choose);
-  if (!HAS_WASM)
-    $("#wasm").attr ('disabled', true);
+  if (HAS_WASM) {
+    var url = 'mandelbrot.wasm';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function(e) {
+      wasm_buffer = this.response;
+      if(wasm_buffer) {
+        mandelWasm = _WASMEXP_.instantiateModule(wasm_buffer, {}, buffer).mandel;
+        $("#wasm").attr ('disabled', false);
+      }
+    };
+    xhr.send(null);
+  }
   animateMandelbrot ();
 }
 

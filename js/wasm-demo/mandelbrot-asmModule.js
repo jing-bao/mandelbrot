@@ -1,4 +1,4 @@
-function nonSimdAsmjsModule (global, imp, buffer) {
+function AsmJSModule (global, imp, buffer) {
   'use asm';
   var b8 = new global.Uint8Array(buffer);
   var toF = global.Math.fround;
